@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>We Need To Talk</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;900&display=swap');
+        
+        body, html { 
+            margin: 0; padding: 0; height: 100%; 
+            background: #000; color: white; 
+            font-family: 'Outfit', sans-serif; overflow: hidden; 
+        }
+
+        /* Dynamic Background with your photo */
+        .universe {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(10, 10, 12, 0.9), rgba(15, 12, 41, 0.9)), 
+                        url('http://googleusercontent.com/image_generation_content/0');
+            background-size: cover; background-position: center;
+            z-index: -2; transition: all 2s ease;
+        }
+
+        .orb {
+            position: absolute; border-radius: 50%;
+            filter: blur(80px); opacity: 0.3;
+            animation: move 20s infinite alternate; z-index: -1;
+        }
+
+        @keyframes move {
+            from { transform: translate(-10%, -10%); }
+            to { transform: translate(110%, 110%); }
+        }
+
+        .glass { 
+            background: rgba(0, 0, 0, 0.6); 
+            backdrop-filter: blur(25px); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 2.5rem;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+        }
+
+        .stage {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        .stage.active { display: flex; animation: zoomIn 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(1.1); filter: blur(10px); }
+            to { opacity: 1; transform: scale(1); filter: blur(0); }
+        }
+
+        .photo-frame {
+            width: 280px; height: 350px;
+            border-radius: 1.5rem;
+            padding: 10px;
+            background: linear-gradient(white, #ff4d4d);
+            box-shadow: 0 0 50px rgba(255, 77, 77, 0.4);
+            transform: rotate(-3deg);
+            transition: all 0.5s ease;
+        }
+        .photo-frame:hover { transform: rotate(0deg) scale(1.05); }
+
+        .btn-premium {
+            background: #ff4d4d; color: white; padding: 1.2rem 3.5rem;
+            border-radius: 2rem; font-weight: 900; 
+            transition: all 0.3s ease; text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .btn-premium:hover { background: #fff; color: #000; transform: translateY(-3px); }
+
+        #cursor-glow {
+            position: fixed; width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(255, 77, 77, 0.1) 0%, transparent 70%);
+            border-radius: 50%; pointer-events: none; z-index: 0;
+            transform: translate(-50%, -50%);
+        }
+
+        .anger-red { color: #ff4d4d; text-shadow: 0 0 15px rgba(255, 77, 77, 0.5); }
+    </style>
+</head>
+<body>
+
+    <div class="universe" id="bg">
+        <div class="orb w-96 h-96 bg-red-900 top-0 left-0"></div>
+        <div class="orb w-80 h-80 bg-red-600 bottom-0 right-0" style="animation-delay: -5s;"></div>
+    </div>
+    
+    <div id="cursor-glow"></div>
+
+    <section id="stage1" class="stage active px-6 text-center">
+        <h2 class="text-xl font-bold anger-red mb-4 tracking-[0.5em] uppercase animate-pulse">Attention</h2>
+        
+        <div class="photo-frame mb-10 mx-auto">
+            <img src="http://googleusercontent.com/image_generation_content/0" class="w-full h-full object-cover rounded-xl" alt="Bestie">
+        </div>
+
+        <h1 class="text-5xl md:text-7xl font-black mb-6 tracking-tighter">I KNOW YOU'RE <span class="anger-red">MAD.</span></h1>
+        <p class="text-gray-400 text-lg mb-10 max-w-sm mx-auto uppercase tracking-widest">But please, don't ignore this.</p>
+        <button onclick="nextStage(2)" class="btn-premium">Open Letter</button>
+    </section>
+
+    <section id="stage2" class="stage px-6">
+        <div class="glass max-w-2xl w-full p-8 md:p-12 relative">
+            <h2 class="text-pink-500 mb-6 font-black tracking-widest text-xs uppercase text-center">From My Heart</h2>
+            <div id="letter-content" class="text-lg md:text-xl text-gray-200 leading-relaxed min-h-[220px]"></div>
+            
+            <div id="continue-box" class="mt-8 opacity-0 transition-all duration-1000 text-center">
+                <button onclick="nextStage(3)" class="text-white font-bold hover:text-pink-400 transition flex items-center gap-2 mx-auto">
+                    I have one more thing to say <span class="animate-bounce-x">→</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="stage3" class="stage px-6">
+        <div class="glass p-8 md:p-12 max-w-md w-full text-center">
+            <div id="emoji-state" class="text-8xl mb-6 transition-all duration-500">😡</div>
+            <h2 class="text-3xl font-black mb-4">Still mad at me?</h2>
+            
+            <p class="text-gray-400 mb-8 italic">Life is boring without our fights and fun. Can we please fix this?</p>
+
+            <textarea id="replyText" placeholder="Roast me here or say something..." 
+                class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-white focus:border-red-500 outline-none h-24 mb-6 transition-all"></textarea>
+
+            <div class="flex flex-col gap-3 items-center">
+                <button onclick="finish()" class="btn-premium w-full !bg-white !text-black hover:!bg-pink-500 hover:!text-white">Okay, I'll Talk ❤️</button>
+                <button id="noBtn" onmouseover="dodge()" onclick="dodge()" 
+                    class="text-gray-500 text-sm py-2 hover:text-red-400 transition-all">
+                    No, stay away.
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const glow = document.getElementById('cursor-glow');
+        document.addEventListener('mousemove', (e) => {
+            glow.style.left = e.clientX + 'px';
+            glow.style.top = e.clientY + 'px';
+        });
+
+        const text = "Look, I know I messed up. I've been staring at our photos and it feels so empty not being able to text you. You're my person. I'd rather have you yell at me for an hour than have this silence. I'm sorry. Truly. Can we please just be 'us' again? I miss my bestie.";
+        
+        function runTypewriter() {
+            let i = 0;
+            const target = document.getElementById('letter-content');
+            target.innerHTML = "";
+            function type() {
+                if (i < text.length) {
+                    target.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, 35);
+                } else {
+                    document.getElementById('continue-box').classList.remove('opacity-0');
+                }
+            }
+            type();
+        }
+
+        function nextStage(n) {
+            document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+            document.getElementById('stage' + n).classList.add('active');
+            
+            if(n === 2) {
+                document.getElementById('bg').style.background = "linear-gradient(rgba(10, 10, 12, 0.7), rgba(15, 12, 41, 0.7)), url('http://googleusercontent.com/image_generation_content/0')";
+                document.getElementById('bg').style.filter = "blur(5px)";
+                setTimeout(runTypewriter, 500);
+            }
+            if(n === 3) {
+                document.getElementById('bg').style.filter = "blur(2px)";
+                setInterval(spawnStardust, 400);
+            }
+        }
+
+        function spawnStardust() {
+            const el = document.createElement('div');
+            el.innerHTML = ["✨", "❤️", "🥀", "☁️"][Math.floor(Math.random()*4)];
+            el.className = "fixed pointer-events-none opacity-40 transition-all duration-[3000ms]";
+            el.style.left = Math.random() * 100 + "vw";
+            el.style.top = "100vh";
+            el.style.fontSize = Math.random() * 20 + 10 + "px";
+            document.body.appendChild(el);
+            setTimeout(() => {
+                el.style.transform = `translateY(-110vh) rotate(${Math.random()*360}deg)`;
+                el.style.opacity = "0";
+            }, 100);
+            setTimeout(() => el.remove(), 4000);
+        }
+
+        let dodgeCount = 0;
+        function dodge() {
+            const btn = document.getElementById('noBtn');
+            const emoji = document.getElementById('emoji-state');
+            dodgeCount++;
+            
+            if(dodgeCount < 6) {
+                btn.style.position = 'fixed';
+                btn.style.left = Math.random() * 80 + 10 + "%";
+                btn.style.top = Math.random() * 80 + 10 + "%";
+                btn.innerHTML = ["Still mad?", "Ouch.", "Forgive me?", "Please?", "Last chance!"][dodgeCount-1];
+                emoji.innerHTML = ["😠", "😤", "😟", "🥺", "🤏"][dodgeCount-1];
+            } else {
+                btn.innerHTML = "Fine, i forgive you ❤️";
+                btn.style.position = "static";
+                btn.classList.add('btn-premium');
+                btn.onclick = finish;
+            }
+        }
+
+        function finish() {
+            const reply = document.getElementById('replyText').value || "Fine, I forgive you! ❤️";
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ['#ff4d4d', '#ffffff', '#ff0066']
+            });
+
+            setTimeout(() => {
+                window.location.href = "https://wa.me/?text=" + encodeURIComponent(reply);
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
