@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infinity Connection | Smiling Friends</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@100;900&display=swap');
+
+        :root {
+            --pink: #ff007f;
+            --gold: #ffcc00;
+            --cyan: #00f2ff;
+            --bg: #030005;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background: var(--bg); overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
+            perspective: 1000px;
+        }
+
+        /* --- CINEMATIC CURTAINS --- */
+        .curtain {
+            position: fixed;
+            width: 50.5vw; height: 100vh;
+            z-index: 1000;
+            background: #12001a;
+            transition: all 2.5s cubic-bezier(0.8, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+        }
+        .left-curtain { left: 0; border-right: 1px solid var(--pink); }
+        .right-curtain { right: 0; border-left: 1px solid var(--pink); }
+        
+        body.open .left-curtain { transform: translateX(-100%); opacity: 0; }
+        body.open .right-curtain { transform: translateX(100%); opacity: 0; }
+
+        .universe {
+            position: fixed;
+            width: 100%; height: 100%;
+            background: radial-gradient(circle at center, #1a0033 0%, #030005 100%);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+
+        /* --- HERO TEXT CARD --- */
+        .hero-section {
+            text-align: center;
+            z-index: 100;
+            opacity: 0;
+            transform: translateZ(-100px);
+            transition: all 2s cubic-bezier(0.19, 1, 0.22, 1) 1.5s;
+            max-width: 800px; 
+            padding: 35px;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(20px);
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+        }
+        body.open .hero-section { opacity: 1; transform: translateZ(0); pointer-events: all; }
+
+        h1 { font-size: 1.8rem; margin: 0; background: linear-gradient(to right, #fff, var(--pink), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; letter-spacing: 2px; }
+        p { font-family: 'Dancing Script'; font-size: 1.4rem; color: #fff; line-height: 1.5; margin: 15px 0; }
+        .stay-forever { display: block; font-size: 1.8rem; color: var(--pink); text-shadow: 0 0 15px var(--pink); margin-bottom: 20px; font-weight: 900; }
+
+        /* --- CHARACTERS --- */
+        .char-container {
+            position: absolute;
+            width: 100%;
+            bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 8%;
+            pointer-events: none;
+            z-index: 50;
+        }
+        .char-unit { 
+            width: 190px; 
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.7));
+            animation: happyPulse 3s infinite ease-in-out;
+        }
+        @keyframes happyPulse {
+            0%, 100% { transform: scale(1) translateY(0); }
+            50% { transform: scale(1.05) translateY(-10px); }
+        }
+
+        .eye-pupil { animation: blink 4s infinite; transform-origin: center; }
+        @keyframes blink { 0%, 90%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+
+        /* --- BUTTONS --- */
+        .btn-container { display: flex; justify-content: center; gap: 40px; margin-top: 25px; position: relative; min-height: 60px; }
+        .btn { padding: 12px 45px; font-size: 1.1rem; border-radius: 50px; cursor: pointer; font-family: 'Montserrat', sans-serif; font-weight: 900; border: none; outline: none; transition: 0.3s; }
+        .yes-btn { background: var(--pink); color: white; box-shadow: 0 0 20px var(--pink); z-index: 10; }
+        .yes-btn:hover { transform: scale(1.1); box-shadow: 0 0 45px var(--pink); }
+        .no-btn { background: #222; color: #666; position: absolute; z-index: 5; transition: left 0.1s ease-out, top 0.1s ease-out; }
+
+        /* --- OVERLAY START --- */
+        .start-btn { position: fixed; z-index: 2000; padding: 20px 50px; background: #12001a; border: 2px solid var(--pink); color: white; font-size: 1.2rem; cursor: pointer; border-radius: 50px; box-shadow: 0 0 30px var(--pink); font-weight: bold; }
+        body.open .start-btn { display: none; }
+        .sparkle { position: absolute; pointer-events: none; z-index: 200; }
+    </style>
+</head>
+<body id="main">
+
+    <div class="curtain left-curtain"></div>
+    <div class="curtain right-curtain"></div>
+
+    <button class="start-btn" onclick="ignite()">OPEN YOUR HEART</button>
+
+    <div class="universe">
+        <div class="hero-section">
+            <h1>Dear Friend you are very special</h1>
+            <p>
+                In a world where everything is temporary, some souls create a permanent place in our hearts. 
+                Thank you for being that beautiful soul in my life. You make everything a little brighter just by being you. ✨ 
+                You bring so much joy into my world. 
+                And I am sorry if I ever make you feel bad, but I will definitely try my best to make you smile again. 
+                You are literally that special to me.
+            </p>
+            <span class="stay-forever">Please stay always with me. 💖</span>
+
+            <div class="btn-container">
+                <button class="btn yes-btn" onclick="victory()">YES</button>
+                <button class="btn no-btn" id="noBtn" onmouseover="dodge()">NO</button>
+            </div>
+        </div>
+
+        <div class="char-container">
+            <div id="panda" class="char-unit">
+                <svg viewBox="0 0 100 100">
+                    <circle cx="30" cy="30" r="14" fill="#1a1a1a"/><circle cx="70" cy="30" r="14" fill="#1a1a1a"/>
+                    <ellipse cx="50" cy="55" rx="42" ry="38" fill="#fff"/>
+                    <ellipse cx="35" cy="52" rx="13" ry="15" fill="#1a1a1a"/><ellipse cx="65" cy="52" rx="13" ry="15" fill="#1a1a1a"/>
+                    <g class="eye-pupil"><circle cx="35" cy="50" r="5" fill="#fff"/><circle cx="65" cy="50" r="5" fill="#fff"/></g>
+                    <ellipse cx="50" cy="65" rx="6" ry="4" fill="#1a1a1a"/>
+                    <path d="M42 72 Q50 80 58 72" stroke="#1a1a1a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                    <circle cx="22" cy="65" r="5" fill="#ffb6c1" opacity="0.6"/><circle cx="78" cy="65" r="5" fill="#ffb6c1" opacity="0.6"/>
+                </svg>
+            </div>
+            <div id="teddy" class="char-unit">
+                <svg viewBox="0 0 100 100">
+                    <circle cx="30" cy="30" r="14" fill="#8d5524"/><circle cx="70" cy="30" r="14" fill="#8d5524"/>
+                    <ellipse cx="50" cy="55" rx="42" ry="38" fill="#a66e38"/>
+                    <g class="eye-pupil"><circle cx="35" cy="50" r="5" fill="#1a1a1a"/><circle cx="65" cy="50" r="5" fill="#1a1a1a"/></g>
+                    <ellipse cx="50" cy="70" rx="15" ry="12" fill="#d2b48c"/>
+                    <ellipse cx="50" cy="66" rx="6" ry="4" fill="#1a1a1a"/>
+                    <path d="M40 73 Q50 82 60 73" stroke="#5d3a1a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+
+        function ignite() {
+            document.body.classList.add('open');
+            setInterval(createAmbientSparkle, 500);
+        }
+
+        function dodge() {
+            const maxX = window.innerWidth - noBtn.offsetWidth;
+            const maxY = window.innerHeight - noBtn.offsetHeight;
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+        }
+
+        function victory() {
+            noBtn.style.display = 'none';
+            document.getElementById('panda').style.transform = "translateY(-120px) scale(1.4) rotate(15deg)";
+            document.getElementById('teddy').style.transform = "translateY(-120px) scale(1.4) rotate(-15deg)";
+            
+            for(let i=0; i<150; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'sparkle';
+                    heart.innerHTML = Math.random() > 0.5 ? '💖' : '✨';
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.top = Math.random() * 100 + 'vh';
+                    heart.style.fontSize = (Math.random() * 30 + 20) + 'px';
+                    document.body.appendChild(heart);
+                    heart.animate([{ transform: 'scale(0)', opacity: 1 }, { transform: `scale(2) translateY(-100px)`, opacity: 0 }], { duration: 1500 }).onfinish = () => heart.remove();
+                }, i * 15);
+            }
+            
+            document.querySelector('h1').innerHTML = "YOU SAID YES! ♾️";
+            document.querySelector('p').innerHTML = "I am the happiest person ever! You bring infinite joy into my life, and I will always be here for you. 💖";
+            document.querySelector('.stay-forever').style.display = 'none';
+            document.querySelector('.yes-btn').style.display = 'none';
+        }
+
+        function createAmbientSparkle() {
+            const f = document.createElement('div');
+            f.className = 'sparkle';
+            f.innerHTML = '✨';
+            f.style.left = Math.random() * 100 + 'vw';
+            f.style.top = (window.innerHeight + 10) + 'px';
+            f.style.color = 'var(--pink)';
+            document.body.appendChild(f);
+            f.animate([{ transform: 'translateY(0)', opacity: 1 }, { transform: `translateY(-${window.innerHeight}px)`, opacity: 0 }], { duration: 6000 }).onfinish = () => f.remove();
+        }
+    </script>
+</body>
+</html>
